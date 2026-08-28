@@ -1,0 +1,1 @@
+export const professional={name:'Dr. Thomas A. Bressan',profession:'Fisioterapeuta',registration:'CREFITO-3/102127-F',phone:'(16) 3954-2923',whatsapp:'',instagram:'',clinic:'Clínica Maffei',address:['Rua João Bueno dos Reis, 300','Jardim Gurilândia','Santa Rosa de Viterbo – SP'],links:{appointment:'',whatsapp:'',instagram:'',location:''}} as const;
