@@ -18,6 +18,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000'),
   title,
   description,
+  icons: { icon: '/thomas-mark.webp' },
   openGraph: { title, description, type: 'website', locale: 'pt_BR', images: [{ url: '/og.png', width: 1200, height: 630, alt: 'Movimento é cuidado — Guia interativo de alongamentos' }] },
   twitter: { card: 'summary_large_image', title, description, images: ['/og.png'] },
 };

@@ -22,12 +22,12 @@ export type Exercise = {
   alt: string;
 };
 
-export const regions: RegionConfig[] = [
-  { id: 'neck', name: 'Pescoço', exerciseCount: 3, color: '#078BC7', accentColor: '#078BC7', icon: '◉' },
-  { id: 'shoulders', name: 'Ombros e braços', exerciseCount: 5, color: '#19A65A', accentColor: '#19A65A', icon: '↗' },
-  { id: 'spine', name: 'Coluna e tronco', exerciseCount: 5, color: '#16823F', accentColor: '#16823F', icon: '⌁' },
-  { id: 'legs', name: 'Pernas', exerciseCount: 5, color: '#F06424', accentColor: '#F06424', icon: '⌇' },
-  { id: 'wrists', name: 'Punhos e mãos', exerciseCount: 4, color: '#7650B8', accentColor: '#7650B8', icon: '↻' },
+const regionBases: Omit<RegionConfig, 'exerciseCount'>[] = [
+  { id: 'neck', name: 'Pescoço', color: '#078BC7', accentColor: '#078BC7', icon: '◉' },
+  { id: 'shoulders', name: 'Ombros e braços', color: '#19A65A', accentColor: '#19A65A', icon: '↗' },
+  { id: 'spine', name: 'Coluna e tronco', color: '#16823F', accentColor: '#16823F', icon: '⌁' },
+  { id: 'legs', name: 'Pernas', color: '#F06424', accentColor: '#F06424', icon: '⌇' },
+  { id: 'wrists', name: 'Punhos e mãos', color: '#7650B8', accentColor: '#7650B8', icon: '↻' },
 ];
 
 export const exercises: Exercise[] = [
@@ -61,3 +61,8 @@ export const exercises: Exercise[] = [
 
 export const getExercisesByRegion = (regionId: RegionId) =>
   exercises.filter((exercise) => exercise.category === regionId).sort((a, b) => a.order - b.order);
+
+export const regions: RegionConfig[] = regionBases.map((region) => ({
+  ...region,
+  exerciseCount: getExercisesByRegion(region.id).length,
+}));

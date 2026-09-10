@@ -15,6 +15,11 @@ export default function Home() {
   const regionExercises = getExercisesByRegion(selectedRegionId);
   const current = regionExercises[exerciseIndex];
   const regionStyle: RegionStyle = { '--region-color': selectedRegion.color, '--region-accent': selectedRegion.accentColor };
+  const exerciseNav = <>
+    <button disabled={exerciseIndex === 0} onClick={() => setExerciseIndex((value) => value - 1)}>← Anterior</button>
+    <div aria-label={`Progresso: exercício ${exerciseIndex + 1} de ${regionExercises.length}`}>{regionExercises.map((item, index) => <span key={item.id} className={index === exerciseIndex ? 'current' : ''} />)}</div>
+    <button onClick={() => exerciseIndex === regionExercises.length - 1 ? setCompleted(true) : setExerciseIndex((value) => value + 1)}>{exerciseIndex === regionExercises.length - 1 ? 'Concluir região' : 'Próximo →'}</button>
+  </>;
 
   const selectRegion = (regionId: RegionId, scroll = true) => {
     setSelectedRegionId(regionId);
@@ -25,7 +30,7 @@ export default function Home() {
 
   return <main>
     <header className="site-header">
-      <a className="brand" href="#top" aria-label="Fisioterapeuta Dr. Thomas Bressan — início"><span>Fisioterapeuta Dr. Thomas Bressan</span></a>
+      <a className="brand" href="#top" aria-label="Fisioterapeuta Dr. Thomas Bressan — início"><span className="brand-mark"><Image src="/thomas-mark.webp" alt="" width={40} height={40} /></span><span>Fisioterapeuta Dr. Thomas Bressan</span></a>
       <nav aria-label="Navegação principal"><a href="#guia">Guia</a><a href="#sobre">Sobre</a><a href="#contato">Contato</a></nav>
       <a className="button button-small button-muted" href="#contato">Agendar avaliação</a>
       <details className="mobile-menu"><summary aria-label="Abrir menu"><span /><span /><span /></summary><div><a href="#guia">Guia</a><a href="#sobre">Sobre</a><a href="#contato">Contato</a><a className="mobile-menu-cta" href="#contato">Agendar avaliação</a></div></details>
@@ -57,16 +62,13 @@ export default function Home() {
           ? <Completion selectedRegion={selectedRegion} onSelect={selectRegion} />
           : <div className="exercise-grid" key={`${selectedRegionId}-${exerciseIndex}`}>
               <ExerciseVisual exercise={current} region={selectedRegion} />
+              <div className="exercise-nav exercise-nav-top">{exerciseNav}</div>
               <div className="exercise-copy">
                 <p className="counter">EXERCÍCIO {exerciseIndex + 1} DE {regionExercises.length}</p>
                 <h3>{current.title}</h3><p>{current.description}</p>
                 <div className="duration"><span>◷</span><div><small>TEMPO SUGERIDO</small><strong>{current.duration}{current.bilateral ? ' de cada lado' : ''}</strong></div></div>
                 <div className="mobile-progress" aria-label={`Progresso: exercício ${exerciseIndex + 1} de ${regionExercises.length}`}><span style={{ width: `${((exerciseIndex + 1) / regionExercises.length) * 100}%` }} /></div>
-                <div className="exercise-nav">
-                  <button disabled={exerciseIndex === 0} onClick={() => setExerciseIndex((value) => value - 1)}>← Anterior</button>
-                  <div aria-label={`Progresso: exercício ${exerciseIndex + 1} de ${regionExercises.length}`}>{regionExercises.map((item, index) => <span key={item.id} className={index === exerciseIndex ? 'current' : ''} />)}</div>
-                  <button onClick={() => exerciseIndex === regionExercises.length - 1 ? setCompleted(true) : setExerciseIndex((value) => value + 1)}>{exerciseIndex === regionExercises.length - 1 ? 'Concluir região' : 'Próximo →'}</button>
-                </div>
+                <div className="exercise-nav exercise-nav-bottom">{exerciseNav}</div>
               </div>
             </div>}
       </article>
@@ -74,8 +76,8 @@ export default function Home() {
 
     <section className="guidelines section"><div className="guideline-title"><p className="section-number">03 / ORIENTAÇÕES</p><h2>Antes de<br />começar.</h2></div><div className="guideline-list">{[['15–30 segundos', 'Mantenha cada alongamento pelo período indicado.'], ['Devagar', 'Faça movimentos lentos e suaves.'], ['Sem dor', 'Não force movimentos que provoquem dor.'], ['Respire', 'Mantenha a respiração natural.'], ['Escolha consciente', 'Selecione exercícios adequados à região e à atividade realizada.']].map(([title, text], index) => <div className="guideline" key={title}><span>0{index + 1}</span><div><h3>{title}</h3><p>{text}</p></div></div>)}</div><p className="notice"><strong>Importante:</strong> Este conteúdo possui caráter educativo e não substitui avaliação ou acompanhamento fisioterapêutico individualizado.</p></section>
     <section id="sobre" className="professional section"><div className="professional-photo"><Image src="/dr-thomas-bressan.jpg" alt="Fisioterapeuta Dr. Thomas Bressan durante atendimento" width={150} height={150} sizes="150px" /></div><div><p className="section-number">04 / O PROFISSIONAL</p><h2>Cuidado que vai<br /><em>além do alongamento.</em></h2><div className="identity"><strong>{professional.name}</strong><span>{professional.profession} · {professional.registration}</span></div><p>Atendimento fisioterapêutico voltado às necessidades de cada pessoa, com atuação em fisioterapia geral, Traumato-Ortopédica e ênfase em Terapia Manual.</p><div className="tags"><span>Fisioterapia em geral</span><span>Traumato-Ortopédica</span><span>Terapia Manual</span></div></div></section>
-    <section id="contato" className="contact section"><p className="section-number">05 / PRÓXIMO PASSO</p><h2>Está sentindo dor ou<br />alguma limitação?</h2><p>Cada pessoa possui necessidades diferentes. Uma avaliação fisioterapêutica permite compreender melhor suas necessidades e definir uma abordagem individualizada.</p><div className="actions"><a className="button" href="tel:+551639542923">Agendar uma avaliação</a></div></section>
-    <section className="clinic section"><div><p className="section-number">06 / ATENDIMENTO</p><h2>Clínica Maffei</h2><div className="tags"><span>Particular</span><span>HapVida</span><span>Unimed</span><span>Atendimento domiciliar</span></div></div><div className="clinic-info"><p>{professional.address.map((line) => <span key={line}>{line}<br /></span>)}</p><a href="tel:+551639542923">{professional.phone}</a></div></section>
+    <section id="contato" className="contact section"><p className="section-number">05 / PRÓXIMO PASSO</p><h2>Está sentindo dor ou<br />alguma limitação?</h2><p>Cada pessoa possui necessidades diferentes. Uma avaliação fisioterapêutica permite compreender melhor suas necessidades e definir uma abordagem individualizada.</p><div className="actions"><a className="button" href={professional.phoneHref}>Agendar uma avaliação</a></div></section>
+    <section className="clinic section"><div><p className="section-number">06 / ATENDIMENTO</p><h2>Clínica Maffei</h2><div className="tags"><span>Particular</span><span>HapVida</span><span>Unimed</span><span>Atendimento domiciliar</span></div></div><div className="clinic-info"><p>{professional.address.map((line) => <span key={line}>{line}<br /></span>)}</p><a href={professional.phoneHref}>{professional.phone}</a></div></section>
     <footer><div><strong>{professional.name}</strong><p>{professional.profession}<br />{professional.registration}</p></div><div className="footer-links"><a href="#guia">Guia</a><a href="#sobre">O profissional</a><a href="#contato">Contato</a></div><div className="footer-bottom"><p>© 2026 Dr. Thomas A. Bressan. Todos os direitos reservados.</p><p>Desenvolvido por Leonardo Dias | Soluções Digitais</p></div></footer><nav className="mobile-dock" aria-label="Acesso rápido"><a href="#guia">Guia interativo ↑</a><a href="#contato">Agendar</a></nav>
   </main>;
 }
